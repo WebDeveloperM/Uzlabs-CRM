@@ -1,0 +1,72 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+h1 {
+    @apply font-bold text-2xl my-2
+}
+
+h2 {
+    @apply font-bold text-xl my-1.5
+}
+
+h3 {
+    @apply font-bold text-lg my-1
+}
+
+h4 {
+    @apply font-bold my-1
+}
+
+h5 {
+    @apply font-bold text-sm my-1
+}
+
+h6 {
+    @apply font-bold text-xs my-0.5
+}
+
+.text-dim {
+    @apply text-gray-400 dark:text-gray-600
+}
+
+.input-icon {
+    @apply w-5 h-5 absolute top-1/2 transform -translate-y-1/2
+}
+
+.input-icon-left {
+    @apply input-icon left-4
+}
+
+.input-icon-right {
+    @apply input-icon right-4
+}
+
+.has-icon-right {
+    @apply pr-11
+}
+
+.has-icon-left {
+    @apply pl-11
+}
+
+.btn-white {
+    @apply bg-transparent hover:bg-transparent border-none hover:border-none shadow-none
+}
+
+::-webkit-scrollbar-thumb {
+    background: transparent
+}
+
+::-webkit-scrollbar {
+    width: 0;
+    background: transparent;
+}
+
+
+.bg-login {
+    background-image: "./login-bg.svg";
+    height: 100vh;
+}
+
+

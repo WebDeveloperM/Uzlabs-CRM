@@ -1,0 +1,47 @@
+.steps-container {
+    position: relative; /* Stepsni konteyner ichida joylashtirish uchun */
+    z-index: 0; /* Navbardan pastroq qiymat qo'ying */
+  }
+
+
+/* Ikonka uchun asosiy rang */
+.rs-steps-item-icon {
+  background-color: #238781; /* Ikonka foni */
+  color: #ffffff; 
+  border-radius: 50%;/* Ikonka ichidagi matn rangi */
+  border-color: #fff;
+
+}
+
+.rs-steps-item-status-process .rs-steps-item-icon {
+  background-color: #13ace9;
+  border-color: #238781;
+}
+
+/* Tugallangan (finished) holatdagi ikonka */
+.rs-steps-item-status-finish .rs-steps-item-icon {
+  background-color: #238781;
+  padding: 7px 0;
+
+}
+
+.rs-steps-line {
+  background-color: #4caf50 !important; /* Yashil rang */
+}
+
+
+/* Focus holatida border rangini o'zgartirish */
+.ant-picker.ant-picker-focused {
+  border-color: #238781; /* Yashil rang */
+  /* Yashil soyali effekt */
+}
+
+/* Ovozli fokuslar uchun klaviatura navigatsiyasi */
+.ant-picker.ant-picker-focused .ant-picker-input > input {
+  outline: none;
+}
+
+.ant-picker:hover {
+  border-color: #238781; /* Hover holatida yashil rang */
+  
+}

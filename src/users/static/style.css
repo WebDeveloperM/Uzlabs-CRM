@@ -1,0 +1,10 @@
+
+.bg-login {
+    background-image: "./login-bg.svg";
+    height: 100vh;
+}
+
+
+.btn-dropdown {
+    @apply font-bold hover:border-none m-0 border-none mt-2 p-1 shadow-none active:bg-none;
+}
