@@ -1,13 +1,8 @@
 import Layout from '@core/bootComponents/Layout'
 import Loader from '@core/bootComponents/Loader'
-import { useAdminData } from '@users/hooks/superUser'
-import React from 'react'
-
-
 
 export default function Dashboard() {
 
-    const { isLoading } = useAdminData(localStorage.getItem("uniqueToken") as string)
     return (
         <Layout>
 
