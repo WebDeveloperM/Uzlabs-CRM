@@ -1,15 +1,44 @@
 import Layout from '@core/bootComponents/Layout'
 import LoaderTimer from '@core/bootComponents/LoaderTimer'
+// import { useDeleteClinicData } from '@medical-dashboard/hooks/deleteClinic'
+import { useGetClinicData } from '@medical-dashboard/hooks/getClinic'
 import { isAuthenticated, isCheckClinic } from '@users/utils/auth'
-import { Navigate } from 'react-router-dom'
+import { useEffect, useState } from 'react'
 
+import { Navigate, useLocation } from 'react-router-dom'
+// import { toast } from 'react-toastify'
+import { Modal, Button } from 'react-bootstrap';
 
 export default function Dashboard() {
-    // const clinicId = localStorage.getItem("clinicId")
-    // const clincData = useGetClinicData(clinicId ? clinicId as string : "0")
-    // const isLoading = clincData.isLoading
-    // const [newData, setData] = useState<ClinicaUpdateData>(defaultData)
- 
+    const clinicId = localStorage.getItem("clinicId")
+    const clinicData = useGetClinicData(clinicId ? clinicId as string : "0")
+    // const [isModalOpen, setIsModalOpen] = useState(false)
+    // const { mutateAsync } = useDeleteClinicData(clinicId as string)
+
+
+    // const handleDelete = async () => {
+    //     const response = await mutateAsync()
+    //     if (response.success && response.message == "Clinic deleted successfully.") {
+    //         toast.success("Shifoxona ma'lumotlari o'chirildi")
+    //         localStorage.removeItem("clinicId")
+    //     }
+    //     setIsModalOpen(false)
+    //     // navigate("/clinica")
+    // }
+
+
+    const [show, setShow] = useState(false);
+
+    const handleClose = () => setShow(false);
+    const handleShow = () => setShow(true);
+    const location = useLocation();
+    const [key, setKey] = useState(0);
+
+    useEffect(() => {
+        setKey(prevKey => prevKey + 1); // Sahifa o'zgarganda keyni yangilash
+    }, [location]);
+
+
 
     if (!isAuthenticated()) {
         return <Navigate to="/" />
@@ -17,7 +46,6 @@ export default function Dashboard() {
     if (!isCheckClinic()) {
         return <Navigate to='/clinica' />
     }
-
 
 
     return (
@@ -270,55 +298,64 @@ export default function Dashboard() {
             </div>
             {/* Row ends */}
 
+            <Button variant="danger" onClick={handleShow}>
+                <i className="ri-delete-bin-line new-modalbek"></i>ocshi
+            </Button>
 
+            <Modal show={show} onHide={handleClose} style={{ zIndex: 2050 }}>
+                <Modal.Header closeButton>
+                    <Modal.Title>Modal title</Modal.Title>
+                </Modal.Header>
+                <Modal.Body>sdfsdfsdfdsfdsfdsfdsfdsfs</Modal.Body>
+                <Modal.Footer>
+                    <Button variant="secondary" onClick={handleClose}>
+                        Close
+                    </Button>
+                    <Button variant="primary" onClick={handleClose}>
+                        Save Changes
+                    </Button>
+                </Modal.Footer>
+            </Modal>
             {/*  Row starts */}
-            <div className="row gx-3">
+            <div className="row gx-3" key={key}>
                 <div className="col-sm-12">
                     <div className="card">
                         <div className="card-header d-flex align-items-center justify-content-between">
-                            <h5 className="card-title">Doctors List</h5>
-                            <a href="add-doctors.html" className="btn btn-primary ms-auto">Add Doctor</a>
+                            <h5 className="card-title">Mening shifoxonam</h5>
                         </div>
                         <div className="card-body pt-0">
-
                             {/*  Table starts */}
                             <div className="table-responsive">
                                 <table id="scrollVertical" className="table truncate m-0 align-middle">
                                     <thead>
                                         <tr>
                                             <th>ID</th>
-                                            <th>Doctor Name</th>
-                                            <th>Designation</th>
-                                            <th className="text-center">Sun</th>
-                                            <th className="text-center">Mon</th>
-                                            <th className="text-center">Tue</th>
-                                            <th className="text-center">Wed</th>
-                                            <th className="text-center">Thu</th>
-                                            <th className="text-center">Fri</th>
-                                            <th className="text-center">Sat</th>
-                                            <th>Actions</th>
+                                            <th>Nomi</th>
+                                            <th>Manzil</th>
+                                            <th className=''>Telefon raqam</th>
+                                            <th className=''>Elektron pochta</th>
+                                            <th className=''>Shifoxona turi</th>
+                                            <th className=''>Actions</th>
                                         </tr>
                                     </thead>
                                     <tbody>
                                         <tr>
-                                            <td>#0008</td>
-                                            <td>
+                                            <td>1</td>
+                                            <td className='flex items-center gap-2'>
                                                 <img src="assets/images/doctor.png" className="img-2x rounded-5 me-1"
                                                     alt="Medical Admin Template" />
-                                                Allan Stuart
+                                                {clinicData.data?.data.clinicName}
                                             </td>
-                                            <td>Oncologist</td>
-                                            <td className="text-center text-danger">NA</td>
-                                            <td className="text-center">9AM-2PM</td>
-                                            <td className="text-center">9AM-2PM</td>
-                                            <td className="text-center">9AM-2PM</td>
-                                            <td className="text-center">9AM-2PM</td>
-                                            <td className="text-center">9AM-2PM</td>
-                                            <td className="text-center">9AM-2PM</td>
+                                            <td> {clinicData.data?.data.legalAddress}</td>
+                                            <td className="">{clinicData.data?.data.phoneNumber}</td>
+                                            <td className="">{clinicData.data?.data.email}</td>
+                                            <td className="">{clinicData.data?.data.clinicType}</td>
+
                                             <td>
-                                                <div className="d-inline-flex gap-1">
-                                                    <button type="button" className="btn btn-outline-danger btn-sm" data-bs-toggle="modal"
-                                                        data-bs-target="#delRow">
+                                                <div className="d-inline-flex gap-1 ">
+
+                                                    <button type="button" className="btn btn-outline-danger btn-sm" data-bs-toggle="modal" data-bs-target="#exampleModal"
+                                                    >
                                                         <i className="ri-delete-bin-line"></i>
                                                     </button>
                                                     <a href="edit-doctors.html" className="btn btn-outline-success btn-sm"
@@ -332,350 +369,26 @@ export default function Dashboard() {
                                                 </div>
                                             </td>
                                         </tr>
-                                        <tr>
-                                            <td>#0021</td>
-                                            <td>
-                                                <img src="assets/images/doctor1.png" className="img-2x rounded-5 me-1"
-                                                    alt="Medical Admin Template" />
-                                                Smith White
-                                            </td>
-                                            <td>Neurology</td>
-                                            <td className="text-center text-danger">NA</td>
-                                            <td className="text-center">3PM-5PM</td>
-                                            <td className="text-center">3PM-5PM</td>
-                                            <td className="text-center">3PM-5PM</td>
-                                            <td className="text-center">3PM-5PM</td>
-                                            <td className="text-center">3PM-5PM</td>
-                                            <td className="text-center">3PM-5PM</td>
-                                            <td>
-                                                <div className="d-inline-flex gap-1">
-                                                    <button type="button" className="btn btn-outline-danger btn-sm" data-bs-toggle="modal"
-                                                        data-bs-target="#delRow">
-                                                        <i className="ri-delete-bin-line"></i>
-                                                    </button>
-                                                    <a href="edit-doctors.html" className="btn btn-outline-success btn-sm"
-                                                        data-bs-toggle="tooltip" data-bs-placement="top" data-bs-title="Edit Doctor Details">
-                                                        <i className="ri-edit-box-line"></i>
-                                                    </a>
-                                                    <a href="doctors-profile.html" className="btn btn-outline-info btn-sm"
-                                                        data-bs-toggle="tooltip" data-bs-placement="top" data-bs-title="View Profile">
-                                                        <i className="ri-eye-line"></i>
-                                                    </a>
-                                                </div>
-                                            </td>
-                                        </tr>
-                                        <tr>
-                                            <td>#0026</td>
-                                            <td>
-                                                <img src="assets/images/doctor2.png" className="img-2x rounded-5 me-1"
-                                                    alt="Medical Admin Template" />
-                                                Gilbert Sandoval
-                                            </td>
-                                            <td>Cardiologist</td>
-                                            <td className="text-center text-danger">NA</td>
-                                            <td className="text-center">5PM-9PM</td>
-                                            <td className="text-center">5PM-9PM</td>
-                                            <td className="text-center">5PM-9PM</td>
-                                            <td className="text-center">5PM-9PM</td>
-                                            <td className="text-center">5PM-9PM</td>
-                                            <td className="text-center">5PM-9PM</td>
-                                            <td>
-                                                <div className="d-inline-flex gap-1">
-                                                    <button type="button" className="btn btn-outline-danger btn-sm" data-bs-toggle="modal"
-                                                        data-bs-target="#delRow">
-                                                        <i className="ri-delete-bin-line"></i>
-                                                    </button>
-                                                    <a href="edit-doctors.html" className="btn btn-outline-success btn-sm"
-                                                        data-bs-toggle="tooltip" data-bs-placement="top" data-bs-title="Edit Doctor Details">
-                                                        <i className="ri-edit-box-line"></i>
-                                                    </a>
-                                                    <a href="doctors-profile.html" className="btn btn-outline-info btn-sm"
-                                                        data-bs-toggle="tooltip" data-bs-placement="top" data-bs-title="View Profile">
-                                                        <i className="ri-eye-line"></i>
-                                                    </a>
-                                                </div>
-                                            </td>
-                                        </tr>
-                                        <tr>
-                                            <td>#0039</td>
-                                            <td>
-                                                <img src="assets/images/doctor3.png" className="img-2x rounded-5 me-1"
-                                                    alt="Medical Admin Template" />
-                                                Bernardo James
-                                            </td>
-                                            <td>Clinical Doctor</td>
-                                            <td className="text-center text-danger">NA</td>
-                                            <td className="text-center">7AM-9AM</td>
-                                            <td className="text-center">7AM-9AM</td>
-                                            <td className="text-center">7AM-9AM</td>
-                                            <td className="text-center">7AM-9AM</td>
-                                            <td className="text-center">7AM-9AM</td>
-                                            <td className="text-center">7AM-9AM</td>
-                                            <td>
-                                                <div className="d-inline-flex gap-1">
-                                                    <button type="button" className="btn btn-outline-danger btn-sm" data-bs-toggle="modal"
-                                                        data-bs-target="#delRow">
-                                                        <i className="ri-delete-bin-line"></i>
-                                                    </button>
-                                                    <a href="edit-doctors.html" className="btn btn-outline-success btn-sm"
-                                                        data-bs-toggle="tooltip" data-bs-placement="top" data-bs-title="Edit Doctor Details">
-                                                        <i className="ri-edit-box-line"></i>
-                                                    </a>
-                                                    <a href="doctors-profile.html" className="btn btn-outline-info btn-sm"
-                                                        data-bs-toggle="tooltip" data-bs-placement="top" data-bs-title="View Profile">
-                                                        <i className="ri-eye-line"></i>
-                                                    </a>
-                                                </div>
-                                            </td>
-                                        </tr>
-                                        <tr>
-                                            <td>#0044</td>
-                                            <td>
-                                                <img src="assets/images/doctor4.png" className="img-2x rounded-5 me-1"
-                                                    alt="Medical Admin Template" />
-                                                Ronald Sullivan
-                                            </td>
-                                            <td>Radiologist</td>
-                                            <td className="text-center text-danger">NA</td>
-                                            <td className="text-center">3PM-9PM</td>
-                                            <td className="text-center">3PM-9PM</td>
-                                            <td className="text-center">3PM-9PM</td>
-                                            <td className="text-center">3PM-9PM</td>
-                                            <td className="text-center">3PM-9PM</td>
-                                            <td className="text-center">3PM-9PM</td>
-                                            <td>
-                                                <div className="d-inline-flex gap-1">
-                                                    <button type="button" className="btn btn-outline-danger btn-sm" data-bs-toggle="modal"
-                                                        data-bs-target="#delRow">
-                                                        <i className="ri-delete-bin-line"></i>
-                                                    </button>
-                                                    <a href="edit-doctors.html" className="btn btn-outline-success btn-sm"
-                                                        data-bs-toggle="tooltip" data-bs-placement="top" data-bs-title="Edit Doctor Details">
-                                                        <i className="ri-edit-box-line"></i>
-                                                    </a>
-                                                    <a href="doctors-profile.html" className="btn btn-outline-info btn-sm"
-                                                        data-bs-toggle="tooltip" data-bs-placement="top" data-bs-title="View Profile">
-                                                        <i className="ri-eye-line"></i>
-                                                    </a>
-                                                </div>
-                                            </td>
-                                        </tr>
-                                        <tr>
-                                            <td>#0083</td>
-                                            <td>
-                                                <img src="assets/images/doctor5.png" className="img-2x rounded-5 me-1"
-                                                    alt="Medical Admin Template" />
-                                                Amelia Bruklin
-                                            </td>
-                                            <td>Neurologist</td>
-                                            <td className="text-center text-danger">NA</td>
-                                            <td className="text-center">6PM-8PM</td>
-                                            <td className="text-center">6PM-8PM</td>
-                                            <td className="text-center">6PM-8PM</td>
-                                            <td className="text-center">6PM-8PM</td>
-                                            <td className="text-center">6PM-8PM</td>
-                                            <td className="text-center">6PM-8PM</td>
-                                            <td>
-                                                <div className="d-inline-flex gap-1">
-                                                    <button type="button" className="btn btn-outline-danger btn-sm" data-bs-toggle="modal"
-                                                        data-bs-target="#delRow">
-                                                        <i className="ri-delete-bin-line"></i>
-                                                    </button>
-                                                    <a href="edit-doctors.html" className="btn btn-outline-success btn-sm"
-                                                        data-bs-toggle="tooltip" data-bs-placement="top" data-bs-title="Edit Doctor Details">
-                                                        <i className="ri-edit-box-line"></i>
-                                                    </a>
-                                                    <a href="doctors-profile.html" className="btn btn-outline-info btn-sm"
-                                                        data-bs-toggle="tooltip" data-bs-placement="top" data-bs-title="View Profile">
-                                                        <i className="ri-eye-line"></i>
-                                                    </a>
-                                                </div>
-                                            </td>
-                                        </tr>
-                                        <tr>
-                                            <td>#0067</td>
-                                            <td>
-                                                <img src="assets/images/doctor2.png" className="img-2x rounded-5 me-1"
-                                                    alt="Medical Admin Template" />
-                                                Bshton Cozei
-                                            </td>
-                                            <td>Pediatrics</td>
-                                            <td className="text-center text-danger">NA</td>
-                                            <td className="text-center">4PM-7PM</td>
-                                            <td className="text-center">4PM-7PM</td>
-                                            <td className="text-center">4PM-7PM</td>
-                                            <td className="text-center">4PM-7PM</td>
-                                            <td className="text-center">4PM-7PM</td>
-                                            <td className="text-center">4PM-7PM</td>
-                                            <td>
-                                                <div className="d-inline-flex gap-1">
-                                                    <button type="button" className="btn btn-outline-danger btn-sm" data-bs-toggle="modal"
-                                                        data-bs-target="#delRow">
-                                                        <i className="ri-delete-bin-line"></i>
-                                                    </button>
-                                                    <a href="edit-doctors.html" className="btn btn-outline-success btn-sm"
-                                                        data-bs-toggle="tooltip" data-bs-placement="top" data-bs-title="Edit Doctor Details">
-                                                        <i className="ri-edit-box-line"></i>
-                                                    </a>
-                                                    <a href="doctors-profile.html" className="btn btn-outline-info btn-sm"
-                                                        data-bs-toggle="tooltip" data-bs-placement="top" data-bs-title="View Profile">
-                                                        <i className="ri-eye-line"></i>
-                                                    </a>
-                                                </div>
-                                            </td>
-                                        </tr>
-                                        <tr>
-                                            <td>#0048</td>
-                                            <td>
-                                                <img src="assets/images/doctor3.png" className="img-2x rounded-5 me-1"
-                                                    alt="Medical Admin Template" />
-                                                George Bailey
-                                            </td>
-                                            <td>Pediatrics</td>
-                                            <td className="text-center text-danger">NA</td>
-                                            <td className="text-center">5PM-8PM</td>
-                                            <td className="text-center">5PM-8PM</td>
-                                            <td className="text-center">5PM-8PM</td>
-                                            <td className="text-center">5PM-8PM</td>
-                                            <td className="text-center">5PM-8PM</td>
-                                            <td className="text-center">5PM-8PM</td>
-                                            <td>
-                                                <div className="d-inline-flex gap-1">
-                                                    <button type="button" className="btn btn-outline-danger btn-sm" data-bs-toggle="modal"
-                                                        data-bs-target="#delRow">
-                                                        <i className="ri-delete-bin-line"></i>
-                                                    </button>
-                                                    <a href="edit-doctors.html" className="btn btn-outline-success btn-sm"
-                                                        data-bs-toggle="tooltip" data-bs-placement="top" data-bs-title="Edit Doctor Details">
-                                                        <i className="ri-edit-box-line"></i>
-                                                    </a>
-                                                    <a href="doctors-profile.html" className="btn btn-outline-info btn-sm"
-                                                        data-bs-toggle="tooltip" data-bs-placement="top" data-bs-title="View Profile">
-                                                        <i className="ri-eye-line"></i>
-                                                    </a>
-                                                </div>
-                                            </td>
-                                        </tr>
-                                        <tr>
-                                            <td>#0058</td>
-                                            <td>
-                                                <img src="assets/images/doctor4.png" className="img-2x rounded-5 me-1"
-                                                    alt="Medical Admin Template" />
-                                                Andrea Lalema
-                                            </td>
-                                            <td>Dentist</td>
-                                            <td className="text-center text-danger">NA</td>
-                                            <td className="text-center">8AM-4PM</td>
-                                            <td className="text-center">8AM-4PM</td>
-                                            <td className="text-center">8AM-4PM</td>
-                                            <td className="text-center">8AM-4PM</td>
-                                            <td className="text-center">8AM-4PM</td>
-                                            <td className="text-center">8AM-4PM</td>
-                                            <td>
-                                                <div className="d-inline-flex gap-1">
-                                                    <button type="button" className="btn btn-outline-danger btn-sm" data-bs-toggle="modal"
-                                                        data-bs-target="#delRow">
-                                                        <i className="ri-delete-bin-line"></i>
-                                                    </button>
-                                                    <a href="edit-doctors.html" className="btn btn-outline-success btn-sm"
-                                                        data-bs-toggle="tooltip" data-bs-placement="top" data-bs-title="Edit Doctor Details">
-                                                        <i className="ri-edit-box-line"></i>
-                                                    </a>
-                                                    <a href="doctors-profile.html" className="btn btn-outline-info btn-sm"
-                                                        data-bs-toggle="tooltip" data-bs-placement="top" data-bs-title="View Profile">
-                                                        <i className="ri-eye-line"></i>
-                                                    </a>
-                                                </div>
-                                            </td>
-                                        </tr>
-                                        <tr>
-                                            <td>#0047</td>
-                                            <td>
-                                                <img src="assets/images/doctor3.png" className="img-2x rounded-5 me-1"
-                                                    alt="Medical Admin Template" />
-                                                Taylor Melon
-                                            </td>
-                                            <td>Therapist</td>
-                                            <td className="text-center text-danger">NA</td>
-                                            <td className="text-center">9AM-3PM</td>
-                                            <td className="text-center">9AM-3PM</td>
-                                            <td className="text-center">9AM-3PM</td>
-                                            <td className="text-center">9AM-3PM</td>
-                                            <td className="text-center">9AM-3PM</td>
-                                            <td className="text-center">9AM-3PM</td>
-                                            <td>
-                                                <div className="d-inline-flex gap-1">
-                                                    <button type="button" className="btn btn-outline-danger btn-sm" data-bs-toggle="modal"
-                                                        data-bs-target="#delRow">
-                                                        <i className="ri-delete-bin-line"></i>
-                                                    </button>
-                                                    <a href="edit-doctors.html" className="btn btn-outline-success btn-sm"
-                                                        data-bs-toggle="tooltip" data-bs-placement="top" data-bs-title="Edit Doctor Details">
-                                                        <i className="ri-edit-box-line"></i>
-                                                    </a>
-                                                    <a href="doctors-profile.html" className="btn btn-outline-info btn-sm"
-                                                        data-bs-toggle="tooltip" data-bs-placement="top" data-bs-title="View Profile">
-                                                        <i className="ri-eye-line"></i>
-                                                    </a>
-                                                </div>
-                                            </td>
-                                        </tr>
-                                        <tr>
-                                            <td>#0082</td>
-                                            <td>
-                                                <img src="assets/images/doctor.png" className="img-2x rounded-5 me-1"
-                                                    alt="Medical Admin Template" />
-                                                Meera Gill
-                                            </td>
-                                            <td>Gynecologist</td>
-                                            <td className="text-center text-danger">NA</td>
-                                            <td className="text-center">5PM-8PM</td>
-                                            <td className="text-center">5PM-8PM</td>
-                                            <td className="text-center">5PM-8PM</td>
-                                            <td className="text-center">5PM-8PM</td>
-                                            <td className="text-center">5PM-8PM</td>
-                                            <td className="text-center">5PM-8PM</td>
-                                            <td>
-                                                <div className="d-inline-flex gap-1">
-                                                    <button type="button" className="btn btn-outline-danger btn-sm" data-bs-toggle="modal"
-                                                        data-bs-target="#delRow">
-                                                        <i className="ri-delete-bin-line"></i>
-                                                    </button>
-                                                    <a href="edit-doctors.html" className="btn btn-outline-success btn-sm"
-                                                        data-bs-toggle="tooltip" data-bs-placement="top" data-bs-title="Edit Doctor Details">
-                                                        <i className="ri-edit-box-line"></i>
-                                                    </a>
-                                                    <a href="doctors-profile.html" className="btn btn-outline-info btn-sm"
-                                                        data-bs-toggle="tooltip" data-bs-placement="top" data-bs-title="View Profile">
-                                                        <i className="ri-eye-line"></i>
-                                                    </a>
-                                                </div>
-                                            </td>
-                                        </tr>
+
                                     </tbody>
                                 </table>
                             </div>
                             {/*  Table ends */}
 
-                            {/*  Modal Delete Row */}
-                            <div className="modal fade" id="delRow" tabIndex={-1} aria-labelledby="delRowLabel" aria-hidden="true">
-                                <div className="modal-dialog modal-sm">
+
+                            <div className="modal fade bg-white z-[50]" id="exampleModal" tabIndex={-1} aria-labelledby="exampleModalLabel" aria-hidden="true">
+                                <div className="modal-dialog">
                                     <div className="modal-content">
                                         <div className="modal-header">
-                                            <h5 className="modal-title" id="delRowLabel">
-                                                Confirm
-                                            </h5>
+                                            <h5 className="modal-title" id="exampleModalLabel">Modal title</h5>
                                             <button type="button" className="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                                         </div>
-                                        <div className="modal-body">
-                                            Are you sure you want to delete the doctor from list?
+                                        <div className="modal-body ">
+                                            sdfsdfsdfdsfdsfdsfdsfdsfs
                                         </div>
                                         <div className="modal-footer">
-                                            <div className="d-flex justify-content-end gap-2">
-                                                <button className="btn btn-outline-secondary" data-bs-dismiss="modal"
-                                                    aria-label="Close">No</button>
-                                                <button className="btn btn-danger" data-bs-dismiss="modal" aria-label="Close">Yes</button>
-                                            </div>
+                                            <button type="button" className="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                                            <button type="button" className="btn btn-primary">Save changes</button>
                                         </div>
                                     </div>
                                 </div>
@@ -684,10 +397,12 @@ export default function Dashboard() {
                         </div>
                     </div>
                 </div>
-            </div>
+            </div >
             {/*  Row ends */}
 
-        </Layout>
+
+
+        </Layout >
     )
 }
 

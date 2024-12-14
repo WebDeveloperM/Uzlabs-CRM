@@ -14084,6 +14084,22 @@ input[type=file]::file-selector-button {
   max-height: 50px;
 }
 
+.modal {
+  display: block !important;
+}
+
+.modal-backdrop {
+  z-index: 1040 !important; /* Ensures the backdrop appears behind the modal */
+}
+.modal {
+  z-index: 1050 !important; /* Ensures the modal appears above the backdrop */
+}
+
+.new-modalbek {
+  background-color: green;
+  color: red;
+}
+
 .toggle-sidebar,
 .pin-sidebar {
   background: #e3eeef;

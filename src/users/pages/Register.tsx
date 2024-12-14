@@ -261,7 +261,7 @@ export default function Register() {
 
                                 <button
                                     type="submit"
-                                    className="w-full p-1.5 my-2 mt-3 bg-secondary hover:bg-secondary/80 text-sm text-white rounded-md duration-200"
+                                    className="w-full p-1.5 my-2 mt-3 bg-primary hover:bg-secondary/80 text-sm text-white rounded-md duration-200"
                                     disabled={isLoading}
                                 >
                                     {t("registerPage")}

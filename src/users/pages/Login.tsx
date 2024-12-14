@@ -57,7 +57,7 @@ export default function Login() {
         const response = await mutateAsync(data)
 
         if (response.success) {
-            // toast.success(t("succesfulLogin"))
+            toast.success(t("succesfulLogin"))
             login(response.data, navigate)
             return
         }
@@ -153,7 +153,7 @@ export default function Login() {
 
                                 <button
                                     type="submit"
-                                    className="w-full btn-sm my-2 mt-4 btn btn-success  hover:bg-secondary/80 text-sm text-white rounded-md duration-200"
+                                    className="w-full btn-sm my-2 mt-4 btn btn-primary  hover:bg-secondary/80 text-sm text-white rounded-md duration-200"
                                 >
                                     {t("login")}
                                 </button>
