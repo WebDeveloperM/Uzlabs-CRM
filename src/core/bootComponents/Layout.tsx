@@ -4,9 +4,12 @@ import { routerNames } from "@core/utils/routesName"
 import { useGetClinicData } from "@my-clinica/hooks/getClinic"
 import { useAdminData } from "@users/hooks/superUser"
 import { isAuthenticated, isCheckClinic } from "@users/utils/auth.ts"
-import { ReactNode } from "react"
+import { ReactNode, useEffect} from "react"
 import { Link, Navigate, useLocation } from "react-router-dom"
 import logo from "@core/static/logo.png"
+import LanguageChange from "./LanguageChange"
+import $ from "jquery";
+
 
 type Props = {
     children: ReactNode
@@ -14,10 +17,66 @@ type Props = {
 
 export default function Layout({ children }: Props) {
 
-    const pathname = useLocation();
     const { data } = useAdminData(localStorage.getItem("uniqueToken") as string)
     const clinicId = localStorage.getItem("clinicId")
     const getClinicData = useGetClinicData(clinicId as string)
+    const { pathname } = useLocation();
+
+    useEffect(() => {
+        $(".toggle-sidebar").on("click", function () {
+            $(".page-wrapper").toggleClass("toggled");
+        });
+
+        // Sidebarni pin qilish
+        $(".pin-sidebar").on("click", function () {
+            if ($(".page-wrapper").hasClass("pinned")) {
+                // Hoverda unpin qilish
+                $(".page-wrapper").removeClass("pinned");
+                $("#sidebar").unbind("hover");
+            } else {
+                $(".page-wrapper").addClass("pinned");
+                $("#sidebar").on("mouseenter", function () {
+                    console.log("mouseenter");
+                    $(".page-wrapper").addClass("sidebar-hovered");
+                });
+
+                $("#sidebar").on("mouseleave", function () {
+                    console.log("mouseout");
+                    $(".page-wrapper").removeClass("sidebar-hovered");
+                });
+            }
+        });
+
+        $("#loading-wrapper").fadeOut(3000);
+
+        // Sidebarni overlay orqali toggle qilish
+        $("#overlay").on("click", function () {
+            $(".page-wrapper").toggleClass("toggled");
+        });
+
+        // Oynaning o'lchami o'zgarganda
+        const handleResize = () => {
+            const width = (window as Window).innerWidth; // `window`ni to'g'ri aniqlash
+            if (width <= 768) {
+                $(".page-wrapper").removeClass("pinned");
+            }
+            if (width >= 768) {
+                $(".page-wrapper").removeClass("toggled");
+            }
+        };
+
+        $(window).resize(handleResize);
+        handleResize(); // initial resize check
+
+        // Cleanup: Komponent o'chirilganda jQuery hodisalarini olib tashlash
+        return () => {
+            $(".toggle-sidebar").off("click");
+            $(".pin-sidebar").off("click");
+            $("#overlay").off("click");
+            $(window).off("resize", handleResize);
+            $("#loading-wrapper").stop();
+        };
+    }, []); // Empty dependency array — bu faqat bir marta ishlaydi
 
 
     if (!isAuthenticated()) {
@@ -30,10 +89,9 @@ export default function Layout({ children }: Props) {
     }
 
     return (
-        <div className="page-wrapper">
+        <div className={`page-wrapper`}>
 
             <div className="main-container">
-
 
                 <nav id="sidebar" className="sidebar-wrapper">
 
@@ -41,7 +99,7 @@ export default function Layout({ children }: Props) {
 
 
                         <div className="app-brand ms-3">
-                            <a href="" className="flex items-center gap-3">
+                            <a href="" className="flex items-center gap-3" >
                                 <img src={getClinicData.data?.success && !getClinicData.data.data.byDefaultLogo ? `${domain}/${getClinicData.data.data.logoFilePath}` : logo} alt="logo" className="logo rounded-full" />
                                 <h1 className={`text-gray-700 duration-200 font-semibold text-xl  origin-left tracking-widest`}>{getClinicData.data?.success && getClinicData.data.data.clinicShortName != "Uzlabs.uz" ? getClinicData.data?.data.clinicShortName : "Uzlabs.uz"}</h1>
                             </a>
@@ -61,24 +119,25 @@ export default function Layout({ children }: Props) {
 
                     <div className="sidebarMenuScroll">
                         <ul className="sidebar-menu">
-                            <li className="active current-page">
-                                <a href="index.html">
+                            <li className={`${pathname.startsWith("/dashboard") ? "active current-page" : ""} `}>
+                                <Link to={"/dashboard"}>
                                     <i className="ri-home-6-line"></i>
                                     <span className="menu-text">Hospital Admin</span>
-                                </a>
+                                </Link>
                             </li>
-                            <li>
-                                <a href="dashboard2.html">
+                            <li className={`${pathname.startsWith("/medical-dashboard") ? "active current-page" : ""} `}>
+                                <Link to={"/medical-dashboard"}>
                                     <i className="ri-home-smile-2-line"></i>
                                     <span className="menu-text">Medical Dashboard</span>
-                                </a>
+                                </Link>
                             </li>
-                            <li>
-                                <a href="dashboard3.html">
+                            <li className={`${pathname.startsWith("/clinic-dashboard") ? "active current-page" : ""} `}>
+                                <Link to={"/clinic-dashboard"}>
                                     <i className="ri-home-5-line"></i>
                                     <span className="menu-text">Clinic Dashboard</span>
-                                </a>
+                                </Link>
                             </li>
+
                             <li>
                                 <a href="doc-appointments.html">
                                     <i className="ri-calendar-2-line"></i>
@@ -610,14 +669,14 @@ export default function Layout({ children }: Props) {
                         <div className="brand-container-sm d-xl-none d-flex align-items-center">
 
                             <div className="app-brand">
-                                <a href="index.html">
-                                    <img src={data?.data?.photoBase64 ? data?.data?.photoBase64 : userLogo} alt="doctor" className="w-[60px] h-[60px] rounded-full mt-3" />
+                                <a className="flex items-center gap-3">
+                                    <img src={getClinicData.data?.success && !getClinicData.data.data.byDefaultLogo ? `${domain}/${getClinicData.data.data.logoFilePath}` : logo} alt="logo" className="logo rounded-full" />
+                                    <h1 className={`text-gray-700 duration-200 font-semibold text-xl  origin-left tracking-widest`}>{getClinicData.data?.success && getClinicData.data.data.clinicShortName != "Uzlabs.uz" ? getClinicData.data?.data.clinicShortName : "Uzlabs.uz"}</h1>
                                 </a>
                                 <a href="" className="flex items-center gap-3">
 
                                 </a>
                             </div>
-
 
                             <button type="button" className="toggle-sidebar">
                                 <i className="ri-menu-line"></i>
@@ -636,31 +695,7 @@ export default function Layout({ children }: Props) {
                             <div className="d-lg-flex d-none gap-2">
 
 
-                                <div className="dropdown">
-                                    <a className="dropdown-toggle header-icon" href="#!" role="button" data-bs-toggle="dropdown"
-                                        aria-expanded="false">
-                                        <img src="assets/images/flags/1x1/fr.svg" className="header-country-flag" alt="Bootstrap Dashboards" />
-                                    </a>
-                                    <div className="dropdown-menu dropdown-menu-end dropdown-mini">
-                                        <div className="country-container">
-                                            <a href="index.html" className="py-2">
-                                                <img src="assets/images/flags/1x1/us.svg" alt="Admin Panel" />
-                                            </a>
-                                            <a href="index.html" className="py-2">
-                                                <img src="assets/images/flags/1x1/in.svg" alt="Admin Panels" />
-                                            </a>
-                                            <a href="index.html" className="py-2">
-                                                <img src="assets/images/flags/1x1/br.svg" alt="Admin Dashboards" />
-                                            </a>
-                                            <a href="index.html" className="py-2">
-                                                <img src="assets/images/flags/1x1/tr.svg" alt="Admin Templatess" />
-                                            </a>
-                                            <a href="index.html" className="py-2">
-                                                <img src="assets/images/flags/1x1/gb.svg" alt="Google Admin" />
-                                            </a>
-                                        </div>
-                                    </div>
-                                </div>
+                                <LanguageChange />
 
                                 <div className="dropdown">
                                     <a className="dropdown-toggle header-icon" href="#!" role="button" data-bs-toggle="dropdown"
@@ -941,7 +976,7 @@ export default function Layout({ children }: Props) {
                                 <a id="userSettings" className="dropdown-toggle d-flex align-items-center" href="#!" role="button"
                                     data-bs-toggle="dropdown" aria-expanded="false">
                                     <div className="avatar-box">
-                                        <img src="assets/images/doctor5.png" className="img-2xx rounded-5" alt="Medical Dashboard" />
+                                        <img src={data?.data?.photoBase64 ? data?.data?.photoBase64 : userLogo} className="img-2xx rounded-5" alt="Medical Dashboard" />
                                         <span className="status busy"></span>
                                     </div>
                                 </a>
@@ -950,9 +985,12 @@ export default function Layout({ children }: Props) {
                                         <span className="small">{localStorage.getItem("role")}</span>
                                         <h6 className="m-0">{data?.data?.firstName}</h6>
                                     </div>
-                                    <div className="d-grid mx-2">
+                                    <Link to={"/"} className="d-grid mx-2">
+                                        <button className="btn btn-danger w-full btn-sm m">Chiqish</button>
+                                    </Link>
+                                    {/* <div className="d-grid mx-2">
                                         <Link to={"/"} className="btn btn-danger ">Chiqish</Link>
-                                    </div>
+                                    </div> */}
                                 </div>
                             </div>
                             {/* Header user settings ends */}
@@ -975,7 +1013,7 @@ export default function Layout({ children }: Props) {
                             </li>
                             <li className="breadcrumb-item text-primary" aria-current="page">
                                 {routerNames.map((route) => (
-                                    route.key == pathname.pathname ? route.value : ""
+                                    route.key == pathname ? route.value : ""
                                 ))}
                             </li>
                         </ol>
@@ -1009,10 +1047,10 @@ export default function Layout({ children }: Props) {
 
                 </div>
 
-            </div>
+            </div >
 
 
-        </div>
+        </div >
 
     )
 } 

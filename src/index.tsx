@@ -19,6 +19,8 @@ import "@core/assets/vendor/daterange/daterange.css"
 import "@core/assets/vendor/datatables/dataTables.bs5.css"
 import "@core/assets/vendor/datatables/dataTables.bs5-custom.css"
 import "@core/assets/vendor/datatables/buttons/dataTables.bs5-custom.css"
+import MedicalDashboardRoutes from "./medicalDashboard/Routes"
+import ClinicDashboardRoutes from "./clinicDashboard/Routes"
 
 
 export default function App() {
@@ -30,6 +32,8 @@ export default function App() {
                     <Routes>
                         <Route path="/*" element={<UserRoutes />} />
                         <Route path="/dashboard/*" element={<DashboardRoutes />} />
+                        <Route path="/medical-dashboard/*" element={<MedicalDashboardRoutes />} />
+                        <Route path="/clinic-dashboard/*" element={<ClinicDashboardRoutes />} />
                         <Route path="/patients/*" element={<PatientsRoutes />} />
                         <Route path="/doctors/*" element={<DoctorsRoutes />} />
                         <Route path="/appointments/*" element={<AppointmentsRoutes />} />

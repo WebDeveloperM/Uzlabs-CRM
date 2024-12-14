@@ -1,12 +1,12 @@
 import Layout from '@core/bootComponents/Layout'
-import Loader from '@core/bootComponents/Loader'
+import LoaderTimer from '@core/bootComponents/LoaderTimer'
 
 export default function Dashboard() {
 
     return (
         <Layout>
 
-            <Loader time={5000} />
+            <LoaderTimer time={3000} />
 
             {/* Row starts */}
             <div className="row gx-3">

@@ -19,6 +19,7 @@
     "clsx": "^2.1.1",
     "humps": "^2.0.1",
     "imask": "^7.6.1",
+    "jquery": "^3.7.1",
     "lodash": "^4.17.21",
     "lucide-react": "^0.454.0",
     "moment": "^2.30.1",
@@ -43,6 +44,7 @@
   },
   "devDependencies": {
     "@types/humps": "^2.0.6",
+    "@types/jquery": "^3.5.32",
     "@types/lodash": "^4.17.4",
     "@types/node": "^20.13.0",
     "@types/react": "^18.2.66",

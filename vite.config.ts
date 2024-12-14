@@ -9,6 +9,8 @@ export default defineConfig({
         alias: {
             "@core": `${path.resolve(__dirname, "./src/core/")}`,
             "@dashboard": `${path.resolve(__dirname, "./src/dashboard/")}`,
+            "@medical-dashboard": `${path.resolve(__dirname, "./src/medicalDashboard/")}`,
+            "@clinic-dashboard": `${path.resolve(__dirname, "./src/clinicDashboard/")}`,
             "@doctors": `${path.resolve(__dirname, "./src/doctors/")}`,
             "@patients": `${path.resolve(__dirname, "./src/patients/")}`,
             "@users": `${path.resolve(__dirname, "./src/users/")}`,

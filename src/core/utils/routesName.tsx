@@ -1,6 +1,7 @@
 
 export const routerNames = [
     { key: "/dashboard", value: "Asosiy" },
+    { key: "/medical-dashboard", value: "Medical Dashboard" },
     { key: "/doctors", value: "Hodimlar" },
     { key: "/doctors/add-doctors", value: "Hodim qo'shish" },
     { key: "/patients", value: "Bemorlar" },

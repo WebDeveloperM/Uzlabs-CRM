@@ -25,6 +25,8 @@
     "paths": {
       "@core/*": ["src/core/*"],
       "@dashboard/*": ["src/dashboard/*"],
+      "@medical-dashboard/*": ["src/medicalDashboard/*"],
+      "@clinic-dashboard/*": ["src/clinicDashboard/*"],
       "@doctors/*": ["src/doctors/*"],
       "@patients/*": ["src/patients/*"],
       "@users/*": ["src/users/*"],
