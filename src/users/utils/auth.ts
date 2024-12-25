@@ -46,18 +46,20 @@ export function logout(navigate: NavigateFunction) {
 }
 
 export function isAuthenticated() {
-    const now = new Date()
-    const expiration = localStorage.getItem("expiration")
-    const uniqueToken = localStorage.getItem("uniqueToken")
+    // const now = new Date()
+    // const expiration = localStorage.getItem("expiration")
+    // const uniqueToken = localStorage.getItem("uniqueToken")
 
-    if (!expiration) return false
-    if (!uniqueToken) return false
+    // if (!expiration) return false
+    // if (!uniqueToken) return false
 
-    const targetDate = new Date(expiration as string)
-    return localStorage.getItem("token") && now < targetDate
+    // const targetDate = new Date(expiration as string)
+    // return localStorage.getItem("token") && now < targetDate
+    return true
 }
 
 export function isCheckClinic() {
-    const clinicId = localStorage.getItem("clinicId")
-    return clinicId && parseInt(clinicId) != 0
+    // const clinicId = localStorage.getItem("clinicId")
+    // return clinicId && parseInt(clinicId) != 0
+    return true
 }
